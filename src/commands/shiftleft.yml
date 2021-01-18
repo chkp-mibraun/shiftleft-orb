@@ -1,8 +1,7 @@
 description: Scan the application dependencies for known vulnerabilities with Check Point Cloudguard ShiftLeft. 
 parameters:
   cpsm_api_key:
-    description: >
-      This is the API key for Check Point CSPM. 
+    description: This is the API key for Check Point CSPM. 
     type: env_var_name
     default: CSPM_API_KEY
   cpsm_api_secret:
