@@ -1,15 +1,10 @@
 version: 2.1
 
 description: >
-  Sample orb description
-# What will your orb allow users to accomplish?
-# Descriptions should be short, simple, and informative.
+Check Point CloudGuard ShiftLeft enables you to add posture scanning to your CI/CD deployment pipelines. You can scan source code, container images & Terraform templates. 
+To use this orb, you will need a Check Point Cloudguard CSPM account and an API Token.
 
-# This information will be displayed in the orb registry and is not mandatory.
 display:
-  home_url: "https://www.website.com/docs"
-  source_url: "https://www.github.com/EXAMPLE_ORG/EXAMPLE_PROJECT"
+  home_url: "https://checkpoint.com"
+  source_url: "https://github.com/chkp-mibraun/shiftleft-orb"
 
-# If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
-# orbs:
-#  hello: circleci/hello-build@0.0.5

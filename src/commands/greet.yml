@@ -1,15 +1,115 @@
-description: >
-  This command echos "Hello World" using file inclusion.
-# What will this command do?
-# Descriptions should be short, simple, and clear.
+description: Scan the application dependencies for known vulnerabilities with Check Point Cloudguard ShiftLeft. 
 parameters:
-  to:
+  cpsm_api_key:
+    description: >
+      This is the API key for Check Point CSPM. 
+    type: env_var_name
+    default: CSPM_API_KEY
+  cpsm_api_secret:
+    description: >
+      This is the API secret for Check Point CSPM. 
+    type: env_var_name
+    default: CSPM_API_KEY
+  blade:
+    description: Select the blade to use.
+    type: enum
+    enum: ["code-scan", "iac-assessment", "image-scan"]
+    default: "code-scan"
+  scan-timeout:
+    description: The length of time before the scan times out (in seconds).
+    type: integer
+    default: 600
+  code-source:
+    description: Location of source code or IAC
     type: string
-    default: "World"
-    description: "Hello to whom?"
+    default: ""
+  docker-image:
+    description: Location of image tarfile
+    type: string
+    default: ""
+  exclude-path:
+    description: Path to exclude from scan
+    type: string
+    default: ""
+  json-output:
+    description: JSON output
+    type: boolean
+    default: false
+  no-cache:
+    description: Do not take results from previous scans
+    type: boolean
+    default: false
+  no-proxy:
+    description: Do no use system proxy settings
+    type: boolean
+    default: false
+  no-blame:
+    description: Do not use Git blame on scanned files
+    type: boolean 
+    default: false
+  ruleset-id:
+    description: Check Point CSPM Ruleset ID
+    type: string
+    default: ""
+  severity-level:
+    description:  Unknown (default), Low, Medium, High, Critical
+    type: enum
+    enum: ["Unknown", "Low", "Medium", "High", "Critical"]
+    default: "Unknown"
+  severity-threshold:
+    description: "severity-level threshold (default: 0)"
+    type: integer
+    default: 0
 steps:
+  # Install ShiftLeft
   - run:
+      name: Download & Install ShiftLeft CLI
       environment:
-        PARAM_TO: <<parameters.to>>
-      name: Hello Greeting
-      command: <<include(scripts/greet.sh)>>
+        SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
+        SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
+      command: |
+        if [[ ! -x /usr/local/bin/shiftleft ]]; then
+          wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
+          chmod +x /usr/local/bin/shiftleft
+        fi
+
+  # ShiftLeft Code Scan
+  - when:
+      condition:
+        equal: [ code-scan, << parameters.blade >> ]  
+      steps:
+        - run :
+          name: Run ShiftLeft Code Scan
+          environment:
+            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
+            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
+          command: |
+             shiftleft -t <<parameters.scan-timeout>> code-scan -s <<parameters.code-source>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
+          
+
+  # ShiftLeft IAC Assessment
+  - when:
+      condition:
+        equal: [ iac-assessment, << parameters.blade >> ]  
+      steps:
+        - run :
+          name: Run ShiftLeft IAC Assessment
+          environment:
+            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
+            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
+          command: |
+             shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
+          
+  # ShiftLeft Image Scan
+  - when:
+      condition:
+        equal: [ image-scan, << parameters.blade >> ]  
+      steps:
+        - run :
+          name: Run ShiftLeft Image Scan
+          environment:
+            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
+            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
+          command: |
+             shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
+          
