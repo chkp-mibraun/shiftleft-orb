@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Deploy dev version of ShiftLeft
           command: |
-            dev_orb_tag="ckhp-mibraun/shiftleft@dev:${CIRCLE_BRANCH}"
+            dev_orb_tag="chkp-mibraun/shiftleft@dev:${CIRCLE_BRANCH}"
             echo "dev_orb_ref: ${dev_orb_ref}"
             /usr/local/bin/circleci orb publish build/orb.yml $dev_orb_tag --token $CIRCLECI_TOKEN
       - store_artifacts:
