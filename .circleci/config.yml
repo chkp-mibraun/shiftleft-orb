@@ -9,35 +9,49 @@ defaults: &defaults
   working_directory: ~/repo
 
 commands:
-  install_cci_cli:
+  install_cli:
     description: Install CircleCLI
     steps:
       - run:
-          name: Install CCI CLI
+          name: Install CircleCLI
           command: |
             sudo curl -fLSs https://circle.ci/cli | sudo bash
           
 jobs:
-  pack-orb:
+  build-orb:
     <<: *defaults
     steps:
       - checkout
+      - install_cli
       - run:
-          name: See files after checkout
+          name: Pack the Orb using CircleCLI
           command: |
-            ls -la
-      - install_cci_cli
-      - run:
-          name: Pack the Orb
-          command: |
-            mkdir packed
-            /usr/local/bin/circleci orb pack src >> packed/orb.yml
+            mkdir build
+            /usr/local/bin/circleci orb pack src >> build/orb.yml
       - persist_to_workspace:
           root: .
           paths:
             - .
 
+  dev:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - install_cli
+      - run:
+          name: Deploy dev version of ShiftLeft
+          command: |
+            dev_orb_tag="ckhp-mibraun/shiftleft@dev:${CIRCLE_BRANCH}"
+            echo "dev_orb_ref: ${dev_orb_ref}"
+            /usr/local/bin/circleci orb publish build/orb.yml $dev_orb_tag --token $CIRCLECI_TOKEN
+      - store_artifacts:
+          path: build/orb.yml
+
 workflows:
   btd:
     jobs:
-      - pack-orb
+      - build-orb
+      - dev:
+          requires:
+            - build-orb
