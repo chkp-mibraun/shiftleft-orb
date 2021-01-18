@@ -33,7 +33,7 @@ jobs:
           paths:
             - .
 
-  dev:
+  dev-build:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -43,7 +43,7 @@ jobs:
           name: Deploy dev version of ShiftLeft
           command: |
             dev_orb_tag="chkp-mibraun/shiftleft@dev:${CIRCLE_BRANCH}"
-            echo "dev_orb_ref: ${dev_orb_ref}"
+            echo "dev_orb_tag: ${dev_orb_tag}"
             /usr/local/bin/circleci orb publish build/orb.yml $dev_orb_tag --token $CIRCLECI_TOKEN
       - store_artifacts:
           path: build/orb.yml
@@ -52,6 +52,6 @@ workflows:
   btd:
     jobs:
       - build-orb
-      - dev:
+      - dev-build:
           requires:
             - build-orb
