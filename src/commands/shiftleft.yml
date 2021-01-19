@@ -63,8 +63,8 @@ steps:
   - run:
       name: Download & Install ShiftLeft CLI
       environment:
-        #CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-        #CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
+        CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+        CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
       command: |
         if [[ ! -x shiftleft/shiftleft ]]; then
           mkdir shiftleft
