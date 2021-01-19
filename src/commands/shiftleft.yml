@@ -76,9 +76,9 @@ steps:
         - run :
             name: Run ShiftLeft Code Scan
             environment:
-              CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-              CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
-              TEST: << parameters.cspm_api_key >>
+              #CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+              #CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
+              
             command: |
               env | grep CHKP
               shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
