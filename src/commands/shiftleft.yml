@@ -80,7 +80,7 @@ steps:
               CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
               TEST: << parameters.cspm_api_key >>
             command: |
-              env | grep TEST
+              env | grep CHKP
               shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
