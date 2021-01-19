@@ -3,12 +3,12 @@ parameters:
   cspm_api_key:
     description: This is the API key for Check Point CSPM. 
     type: env_var_name
-    default: CSPM_API_KEY
+    default: ""
   cspm_api_secret:
     description: >
       This is the API secret for Check Point CSPM. 
     type: env_var_name
-    default: CSPM_API_KEY
+    default: ""
   blade:
     description: Select the blade to use.
     type: enum
@@ -65,8 +65,8 @@ steps:
   - run:
       name: Download & Install ShiftLeft CLI
       environment:
-        CHKP_CLOUDGUARD_ID: <<parameters.cspm_api_key>>
-        CHKP_CLOUDGUARD_SECRET: <<parameters.cspm_api_secret>>
+        CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+        CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
       command: |
         if [[ ! -x /usr/local/bin/shiftleft ]]; then
           sudo wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
