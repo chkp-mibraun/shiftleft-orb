@@ -65,8 +65,8 @@ steps:
   - run:
       name: Download & Install ShiftLeft CLI
       environment:
-        SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
-        SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
+        CSPM_API_KEY: <<parameters.cspm_api_key>>
+        CSPM_API_SECRET: <<parameters.cspm_api_secret>>
       command: |
         if [[ ! -x /usr/local/bin/shiftleft ]]; then
           sudo wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
@@ -80,9 +80,6 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Code Scan
-            environment:
-              CSPM_API_KEY: <<parameters.cspm_api_key>>
-              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
@@ -99,9 +96,6 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft IAC Assessment
-            environment:
-              CSPM_API_KEY: <<parameters.cspm_api_key>>
-              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
@@ -117,9 +111,6 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Image Scan
-            environment:
-              CSPM_API_KEY: <<parameters.cspm_api_key>>
-              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
