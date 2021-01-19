@@ -4,8 +4,7 @@ parameters:
     description: This is the API key for Check Point CSPM. 
     type: env_var_name
   cspm_api_secret:
-    description: >
-      This is the API secret for Check Point CSPM. 
+    description: This is the API secret for Check Point CSPM. 
     type: env_var_name
   blade:
     description: Select the blade to use.
@@ -62,9 +61,6 @@ steps:
   # Install ShiftLeft
   - run:
       name: Download & Install ShiftLeft CLI
-      environment:
-        #CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-        #CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
       command: |
         if [[ ! -x shiftleft/shiftleft ]]; then
           mkdir shiftleft
