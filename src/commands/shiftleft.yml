@@ -80,6 +80,9 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Code Scan
+            environment:
+              CSPM_API_KEY: <<parameters.cspm_api_key>>
+              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
@@ -96,6 +99,9 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft IAC Assessment
+            environment:
+              CSPM_API_KEY: <<parameters.cspm_api_key>>
+              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
@@ -112,6 +118,8 @@ steps:
         - run :
             name: Run ShiftLeft Image Scan
             environment:
+              CSPM_API_KEY: <<parameters.cspm_api_key>>
+              CSPM_API_SECRET: <<parameters.cspm_api_secret>>
             command: |
               sudo shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
