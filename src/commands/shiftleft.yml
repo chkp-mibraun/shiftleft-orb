@@ -2,10 +2,10 @@ description: Scan the application dependencies for known vulnerabilities with Ch
 parameters:
   cspm_api_key:
     description: This is the API key for Check Point CSPM. 
-    type: env_var_name
+    type: string
   cspm_api_secret:
     description: This is the API secret for Check Point CSPM. 
-    type: env_var_name
+    type: string
   blade:
     description: Select the blade to use.
     type: enum
