@@ -62,10 +62,14 @@ steps:
   # Install ShiftLeft
   - run:
       name: Download & Install ShiftLeft CLI
+      environment:
+        CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+        CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
       command: |
-        if [[ ! -x /usr/local/bin/shiftleft ]]; then
-          sudo wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
-          sudo chmod +x /usr/local/bin/shiftleft
+        if [[ ! -x shiftleft/shiftleft ]]; then
+          mkdir shiftleft
+          wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O shiftleft/shiftleft
+          chmod +x shiftleft/shiftleft
         fi
 
   # ShiftLeft Code Scan
@@ -79,7 +83,7 @@ steps:
               CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
               CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
             command: |
-              sudo shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -94,8 +98,11 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft IAC Assessment
+            environment:
+              CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+              CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>      
             command: |
-              sudo shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -109,8 +116,11 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Image Scan
+            environment:
+              CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
+              CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
             command: |
-              sudo shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
