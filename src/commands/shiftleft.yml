@@ -83,6 +83,7 @@ steps:
               CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
               CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
             command: |
+              env
               shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
@@ -102,7 +103,7 @@ steps:
               CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
               CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>      
             command: |
-              shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              shiftleft/shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -120,7 +121,7 @@ steps:
               CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
               CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
             command: |
-              shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              shiftleft/shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
