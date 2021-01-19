@@ -81,7 +81,7 @@ steps:
         - run :
             name: Run ShiftLeft Code Scan
             command: |
-              shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
+              sudo shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -97,7 +97,7 @@ steps:
         - run :
             name: Run ShiftLeft IAC Assessment
             command: |
-              shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              sudo shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -113,7 +113,7 @@ steps:
             name: Run ShiftLeft Image Scan
             environment:
             command: |
-              shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              sudo shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
               -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
               <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
