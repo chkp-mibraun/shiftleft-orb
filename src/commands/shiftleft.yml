@@ -69,8 +69,8 @@ steps:
         SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
       command: |
         if [[ ! -x /usr/local/bin/shiftleft ]]; then
-          wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
-          chmod +x /usr/local/bin/shiftleft
+          sudo wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O /usr/local/bin/shiftleft
+          sudo chmod +x /usr/local/bin/shiftleft
         fi
 
   # ShiftLeft Code Scan
