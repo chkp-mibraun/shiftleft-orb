@@ -59,6 +59,7 @@ parameters:
     description: "severity-level threshold (default: 0)"
     type: integer
     default: 0
+
 steps:
   # Install ShiftLeft
   - run:
@@ -78,37 +79,44 @@ steps:
         equal: [ code-scan, << parameters.blade >> ]  
       steps:
         - run :
-          name: Run ShiftLeft Code Scan
-          environment:
-            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
-            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
-          command: |
-             shiftleft -t <<parameters.scan-timeout>> code-scan -s <<parameters.code-source>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
+            name: Run ShiftLeft Code Scan
+            command: |
+              shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
+              -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
+              <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> 
           
 
   # ShiftLeft IAC Assessment
   - when:
       condition:
-        equal: [ iac-assessment, << parameters.blade >> ]  
+        equal: [ iac-assessment, << parameters.blade >> ] 
       steps:
         - run :
-          name: Run ShiftLeft IAC Assessment
-          environment:
-            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
-            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
-          command: |
-             shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
+            name: Run ShiftLeft IAC Assessment
+            command: |
+              shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
+              -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
+              <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> 
           
   # ShiftLeft Image Scan
   - when:
       condition:
-        equal: [ image-scan, << parameters.blade >> ]  
+        equal: [ image-scan, << parameters.blade >> ] 
       steps:
         - run :
-          name: Run ShiftLeft Image Scan
-          environment:
-            SHIFTLEFT_INTEGRATION_NAME: CIRCLECI_ORB
-            SHIFTLEFT_INTEGRATION_VERSION: REPLACE_ORB_VERSION
-          command: |
-             shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> -x <<parameters.exclude-path>> <<# parameters.json-output >> -j <</ parameters.json-output >> <<# parameters.no-cache >> -nc <</ parameters.no-cache >> <<# parameters.no-proxy >> -np <</ parameters.no-proxy >> <<# parameters.no-blame >> -nb <</ parameters.no-blame >> -sev << parameters.severity-level >> -sevt << parameters.severity-threshold >>
-          
+            name: Run ShiftLeft Image Scan
+            environment:
+            command: |
+              shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
+              -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
+              <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> 
+
