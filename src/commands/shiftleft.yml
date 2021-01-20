@@ -1,11 +1,5 @@
 description: Scan the application dependencies for known vulnerabilities with Check Point Cloudguard ShiftLeft. 
 parameters:
-  cspm_api_key:
-    description: This is the API key for Check Point CSPM. 
-    type: string
-  cspm_api_secret:
-    description: This is the API secret for Check Point CSPM. 
-    type: string
   blade:
     description: Select the blade to use.
     type: enum
@@ -18,11 +12,11 @@ parameters:
   code-source:
     description: Location of source code or IAC
     type: string
-    default: ""
+    default: "."
   docker-image:
     description: Location of image tarfile
     type: string
-    default: ""
+    default: "."
   exclude-path:
     description: Path to exclude from scan
     type: string
@@ -75,9 +69,6 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Code Scan
-           #environment:
-            #  CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-            #  CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>  
             command: |
               shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
