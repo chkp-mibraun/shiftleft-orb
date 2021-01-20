@@ -1,4 +1,4 @@
-description: Scan the application dependencies for known vulnerabilities with Check Point Cloudguard ShiftLeft. 
+description:   The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
 parameters:
   blade:
     description: Select the blade to use.
