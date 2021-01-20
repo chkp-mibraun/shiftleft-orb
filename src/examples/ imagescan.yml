@@ -1,0 +1,25 @@
+version: 2.1
+
+orbs:
+  shiftleft: chkp-mibraun/shiftleft
+workflows:
+  test-env-vars:
+    jobs:
+      - build:
+      #Context must exist for Environment Variable to pass through to orb
+          context: Cloudguard
+
+jobs:
+  build:
+     machine:
+       image: ubuntu-2004:202010-01
+     steps:
+       - checkout
+       - run: |
+           docker build -t test/test .
+           docker save test/test  -o ./scantest.tar
+                    
+       - shiftleft/shiftleft:
+           blade: image-scan
+           docker-image: ./scantest.tar
+           scan-timeout: 900

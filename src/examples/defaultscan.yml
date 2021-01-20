@@ -1,0 +1,19 @@
+version: 2.1
+
+orbs:
+  shiftleft: chkp-mibraun/shiftleft
+workflows:
+  test-env-vars:
+    jobs:
+      - build:
+  #Context must exist for Environment Variable to pass through to orb
+          context: Cloudguard
+
+jobs:
+  build:
+     machine:
+       image: ubuntu-2004:202010-01
+     steps:
+       - checkout    
+  #By default, it will run a code scan in the "." directory              
+       - shiftleft/shiftleft
