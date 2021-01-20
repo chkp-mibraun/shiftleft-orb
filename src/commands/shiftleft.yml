@@ -84,10 +84,7 @@ steps:
         equal: [ iac-assessment, << parameters.blade >> ] 
       steps:
         - run :
-            name: Run ShiftLeft IAC Assessment
-            environment:
-              CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-              CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>      
+            name: Run ShiftLeft IAC Assessment   
             command: |
               shiftleft/shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
@@ -103,9 +100,6 @@ steps:
       steps:
         - run :
             name: Run ShiftLeft Image Scan
-            environment:
-              CHKP_CLOUDGUARD_ID: << parameters.cspm_api_key >>
-              CHKP_CLOUDGUARD_SECRET: << parameters.cspm_api_secret >>
             command: |
               shiftleft/shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
