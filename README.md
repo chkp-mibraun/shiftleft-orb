@@ -24,7 +24,7 @@ The two environment variables are:
 CHKP_CLOUDGUARD_ID<br>
 CHKP_CLOUDGUARD_SECRET<br>
 
-![](images/cloudguard_circleci.png)
+![](images/context.PNG)
 
 From there, you can include the orb as a step within your job.
 
