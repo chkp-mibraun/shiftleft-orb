@@ -5,12 +5,11 @@ usage:
 orbs:
   shiftleft: chkp-mibraun/shiftleft
 workflows:
-  test-env-vars:
+  set-context:
     jobs:
       - build:
       #Context must exist for Environment Variable to pass through to orb
           context: Cloudguard
-
 jobs:
   build:
      machine:
