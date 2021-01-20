@@ -132,4 +132,3 @@ jobs:
 | `ruleset-id`                                               | Check Point CSPM Ruleset ID (For iac-assessment)                | ` `                                              |
 | `severity-level`                                           | Unknown (default), Low, Medium, High, Critical                  | `Unknown`                                        |
 | `severity-threshold`                                       | Severity-level threshold (default: 0)                           | `0`                                              |
-| ---------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
