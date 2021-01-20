@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Cloudguard ShiftLeft orb is a plugin for CircleCI that will scan source code, docker images, and Infrastructure as Code (IAC). ShiftLeft identifies both vulnerabilites and malware in source code & Docker images. You can also use ShiftLeft to 
+The Cloudguard ShiftLeft orb is a plugin for CircleCI that will scan source code, docker images, and Infrastructure as Code (IAC). ShiftLeft identifies both vulnerabilites and malware in source code & Docker images. You can also use ShiftLeft to check for compliance violations in IAC.
 
 ![](images/cloudguard_circleci.png)
 
