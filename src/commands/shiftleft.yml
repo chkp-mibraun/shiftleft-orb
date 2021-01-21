@@ -78,8 +78,8 @@ steps:
               <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
               <<#parameters.json-output>>-j <<parameters.json-output>> || true > out.json <</parameters.json-output>> 
             store_artifacts:
-              path: out.json
-              destination: artifact-file
+              path: ./out.json
+              destination: out.json
    
 
   # ShiftLeft IAC Assessment
