@@ -1,6 +1,5 @@
 description:   The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
 parameters:
-#General Parameters
   blade:
     description: Select the blade to use.
     type: enum
