@@ -52,7 +52,7 @@ parameters:
   ruleset-id:
     description: Check Point CSPM Ruleset ID
     type: integer
-    default: ""
+    default: "0"
   severity-level:
     description:  Unknown (default), Low, Medium, High, Critical
     type: enum
