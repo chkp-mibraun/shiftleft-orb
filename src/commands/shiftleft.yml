@@ -1,5 +1,6 @@
 description:   The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
 parameters:
+  #General ShiftLeft Parameters
   blade:
     description: Select the blade to use.
     type: enum
@@ -21,17 +22,17 @@ parameters:
     description: Use a specific blade version
     type: string
     default: ""
-#Code-Scan Parameters 
-   code-source:
+  #Code-Scan Parameters 
+  code-source:
     description: Location of source code for code-scan blade
     type: string
     default: "."
-#Image-Scan Parameters 
+  #Image-Scan Parameters 
   docker-image:
     description: Location of image tarfile
     type: string
     default: "."
-#Shared Code-Scan & Image-Scan Parameters  
+  #Shared Code-Scan & Image-Scan Parameters  
   exclude-path:
     description: Path to exclude from scan
     type: string
@@ -52,7 +53,7 @@ parameters:
     description: Do not use Git blame on scanned files
     type: boolean 
     default: false
-#Iac-Assessment Parameters    
+  #Iac-Assessment Parameters    
   path:
     description: Path to terraform project for iac-assessment
     type: string
