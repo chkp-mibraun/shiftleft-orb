@@ -51,7 +51,7 @@ parameters:
     default: false
   ruleset-id:
     description: Check Point CSPM Ruleset ID
-    type: string
+    type: integer
     default: ""
   severity-level:
     description:  Unknown (default), Low, Medium, High, Critical
