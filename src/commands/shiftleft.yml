@@ -169,12 +169,12 @@ steps:
             command: |
               shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
               iac-assessment -p <<parameters.path>> \
-              <<#parameters.ruleset-id>> -r <<parameters.ruleset-id>> <</parameters.ruleset-id>> \  
+              <<#parameters.ruleset-id>> -r <<parameters.ruleset-id>> <</parameters.ruleset-id>> -w \  
               <<#parameters.logic-id>> -l <<parameters.logic-id>> <</parameters.logic-id>> \
               <<#parameters.entry>> -e <<parameters.entry>> <</parameters.entry>> \  
-              <<#parameters.findings>> -f <<parameters.findings>> <</parameters.findings>> \ 
+              <<#parameters.findings>> -f <<parameters.findings> <</parameters.findings>> \ 
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
               <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
-              <<#parameters.json-output>>-j <</parameters.json-output>> -w 
+              <<#parameters.json-output>>-j <</parameters.json-output>> 
 
