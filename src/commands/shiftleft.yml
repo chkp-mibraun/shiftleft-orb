@@ -172,7 +172,7 @@ steps:
               <<#parameters.ruleset-id>> -r <<parameters.ruleset-id>> <</parameters.ruleset-id>> \  
               <<#parameters.logic-id>> -l <<parameters.logic-id>> <</parameters.logic-id>> \
               <<#parameters.entry>> -e <<parameters.entry>> <</parameters.entry>> \  
-              <<#parameters.findings>> -e <<parameters.findings> <</parameters.findings>> \ 
+              <<#parameters.findings>> -f <<parameters.findings>> <</parameters.findings>> \ 
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
               <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
