@@ -14,11 +14,11 @@ parameters:
     type: string
     default: ""
   environment:
-    description: CLoudguard Native ShiftLeft Environment
+    description: Cloudguard Native ShiftLeft Environment
     type: string
     default: ""
   force-version:
-    description: Use a blade specific version
+    description: Use a specific blade version
     type: string
     default: ""
   code-source:
