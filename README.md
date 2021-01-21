@@ -125,7 +125,7 @@ jobs:
 | `code-source`                                              | Source directory to scan source code or IAC                     | `.`                                              |
 | `docker-image`                                             | Location of the image tar file                                  | `.`                                              |
 | `exclude-path`                                             | Path to exclude from scan                                       | ` `                                              |
-| `json-output`                                              | JSON Output (True or False)                                     | `false`                                          |
+| `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded                                     | `false`                                          |
 | `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
 | `no-proxy`                                                 | Do not use system proxy settings (True or False)                | `false`                                          |
 | `no--blame`                                                | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
