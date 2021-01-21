@@ -80,16 +80,20 @@ steps:
         - store_artifacts:
             path: ./out.json
             destination: out.json
-        - run: 
-            name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
-            command: |
-              <<#parameters.json-output>>
-              status=$(cat ./out.json | jq .action -r)
-              block="BLOCK"
-              if [ "$status" == "$block" ]; then
-              exit 6
-              fi
-              <</parameters.json-output>>
+        - when:
+            condition:
+              equal: [ true, << parameters.json-output >> ] 
+            steps:
+              run: 
+                name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
+                command: |
+                  <<#parameters.json-output>>
+                  status=$(cat ./out.json | jq .action -r)
+                  block="BLOCK"
+                  if [ "$status" == "$block" ]; then
+                  exit 6
+                  fi
+                  <</parameters.json-output>>
 
   # ShiftLeft IAC Assessment
   - when:
