@@ -166,6 +166,7 @@ jobs:
 | `ruleset-id`                                               | Check Point CSPM Ruleset ID. Either this or logic-id must be populated if using iac-assessment | ` `               |
 | `entry`                                                    | Terraform Entry Point                                           | ` `                                              |
 | `logic-id`                                                 | Logic rule string. (Cannot be combined with ruleset ID)         | ` `                                              |
+| `findings`                                                 | Display the results in human readable format                    | `True`                                           |
 | `exclude-path`                                             | Path to exclude from scan                                       | ` `                                              |
 | `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded. (Artifact applies only to code-scan and image-scan)| `false`|
 | `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
