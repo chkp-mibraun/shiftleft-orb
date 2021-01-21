@@ -101,12 +101,27 @@ steps:
         - run :
             name: Run ShiftLeft IAC Assessment   
             command: |
-              shiftleft/shiftleft -t <<parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
-              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
-              -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
-              <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
+              <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
               <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
-              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> 
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <<parameters.json-output>> | jq . > out.json || true <</parameters.json-output>> 
+        - when:
+            condition:
+              equal: [ true, << parameters.json-output >> ] 
+            steps:
+              - store_artifacts:
+                  path: ./out.json
+                  destination: out.json
+              - run: 
+                  name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
+                  command: |
+                    status=$(cat ./out.json | jq .action -r)
+                    if [ "$status" == "BLOCK" ]; then
+                    exit 6
+                    fi
           
   # ShiftLeft Image Scan
   - when:
@@ -116,10 +131,25 @@ steps:
         - run :
             name: Run ShiftLeft Image Scan
             command: |
-              shiftleft/shiftleft -t <<parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
-              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  <<#parameters.json-output>> \
-              -j <<parameters.json-output>> <</parameters.json-output>> <<#parameters.no-cache>> -nc <</parameters.no-cache>> \ 
-              <<#parameters.no-proxy>> -np <</parameters.no-proxy>> <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
+              <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
               <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
-              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> 
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <<parameters.json-output>> | jq . > out.json || true <</parameters.json-output>> 
+        - when:
+            condition:
+              equal: [ true, << parameters.json-output >> ] 
+            steps:
+              - store_artifacts:
+                  path: ./out.json
+                  destination: out.json
+              - run: 
+                  name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
+                  command: |
+                    status=$(cat ./out.json | jq .action -r)
+                    if [ "$status" == "BLOCK" ]; then
+                    exit 6
+                    fi
 
