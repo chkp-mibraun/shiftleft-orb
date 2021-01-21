@@ -132,6 +132,6 @@ jobs:
 | `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
 | `no-proxy`                                                 | Do not use system proxy settings (True or False)                | `false`                                          |
 | `no--blame`                                                | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
-| `ruleset-id`                                               | Check Point CSPM Ruleset ID (For iac-assessment)                | ` `                                              |
+| `ruleset-id`                                               | Check Point CSPM Ruleset ID (For iac-assessment). This must be populated if using iac-assessment | ` `             |
 | `severity-level`                                           | Unknown (default), Low, Medium, High, Critical                  | `Unknown`                                        |
 | `severity-threshold`                                       | Severity-level threshold (default: 0)                           | `0`                                              |
