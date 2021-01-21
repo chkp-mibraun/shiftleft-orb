@@ -12,12 +12,15 @@ parameters:
   directory:
     description: The directory where ShiftLeft does processing. (Default is /tmp). This is NOT for location of source code.
     type: string
+    default: ""
   environment:
     description: CLoudguard Native ShiftLeft Environment
     type: string
+    default: ""
   force-version:
     description: Use a blade specific version
     type: string
+    default: ""
   code-source:
     description: Location of source code or IAC
     type: string
