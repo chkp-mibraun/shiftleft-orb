@@ -9,6 +9,15 @@ parameters:
     description: The length of time before the scan times out (in seconds).
     type: integer
     default: 600
+  directory:
+    description: The directory where ShiftLeft does processing. (Default is /tmp). This is NOT for location of source code.
+    type: string
+  environment:
+    description: CLoudguard Native ShiftLeft Environment
+    type: string
+  force-version:
+    description: Use a blade specific version
+    type: string
   code-source:
     description: Location of source code or IAC
     type: string
@@ -70,7 +79,8 @@ steps:
         - run :
             name: Run ShiftLeft Code Scan
             command: |
-              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> code-scan -s <<parameters.code-source>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              code-scan -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
               <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -101,7 +111,8 @@ steps:
         - run :
             name: Run ShiftLeft IAC Assessment   
             command: |
-              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> iac-assessment -s <<parameters.code-source>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>>     <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              iac-assessment -s <<parameters.code-source>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
               <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
@@ -131,7 +142,8 @@ steps:
         - run :
             name: Run ShiftLeft Image Scan
             command: |
-              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> image-scan -i <<parameters.docker-image>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>>     <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
               <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
