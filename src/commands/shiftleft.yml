@@ -81,7 +81,7 @@ steps:
             path: ./out.json
             destination: out.json
         - run: 
-            name: Block pipeline if using json-output       
+            name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
             command: |
               <<#parameters.json-output>>
               status=$(cat ./out.json | jq .action -r)
