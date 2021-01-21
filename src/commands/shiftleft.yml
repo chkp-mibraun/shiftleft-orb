@@ -81,6 +81,7 @@ steps:
             path: ./out.json
             destination: out.json
         - run: 
+            name: Block pipeline if using json-output       
             command: |
               <<#parameters.json-output>>
               status=$(cat ./out.json | jq .action -r)
