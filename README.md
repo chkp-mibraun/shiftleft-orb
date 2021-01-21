@@ -116,7 +116,7 @@ jobs:
 
 
 ```
-## Parameters
+## Code-Scan Parameters
 
 | Parameter                                                  | Description                                                     | Default                                          |
 | ---------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
@@ -125,13 +125,51 @@ jobs:
 | `environment`                                              | Cloudguard Native ShiftLeft Environment                         | ` `                                              |
 | `force-version`                                            | Use a specific blade version                                    | ` `                                              |
 | `scan-timeout`                                             | The length of time before a scan will timeout (in seconds)      | `600`                                            |
-| `code-source`                                              | Source directory to scan source code or IAC                     | `.`                                              |
-| `docker-image`                                             | Location of the image tar file                                  | `.`                                              |
+| `code-source`                                              | Location of source code for code-scan blade                     | `.`                                              |
 | `exclude-path`                                             | Path to exclude from scan                                       | ` `                                              |
-| `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded| `false`                        |
+| `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded. (Artifact applies only to code-scan and image-scan)| `false`|
 | `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
 | `no-proxy`                                                 | Do not use system proxy settings (True or False)                | `false`                                          |
-| `no--blame`                                                | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
-| `ruleset-id`                                               | Check Point CSPM Ruleset ID (For iac-assessment). This must be populated if using iac-assessment | ` `             |
+| `no-blame`                                                 | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
+| `severity-level`                                           | Unknown (default), Low, Medium, High, Critical                  | `Unknown`                                        |
+| `severity-threshold`                                       | Severity-level threshold (default: 0)                           | `0`                                              |
+
+
+## Image-Scan Parameters
+
+| Parameter                                                  | Description                                                     | Default                                          |
+| ---------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| `blade`                                                    | ShiftLeft Scan Type (code-scan, iac-assessment, image-scan)     | `code-scan`                                      |
+| `directory`                                                | The directory where ShiftLeft does processing. (Default is /tmp). This is NOT for location of source code.| ` `    |
+| `environment`                                              | Cloudguard Native ShiftLeft Environment                         | ` `                                              |
+| `force-version`                                            | Use a specific blade version                                    | ` `                                              |
+| `scan-timeout`                                             | The length of time before a scan will timeout (in seconds)      | `600`                                            |
+| `docker-image`                                             | Location of the image tar file                                  | `.`                                              |
+| `exclude-path`                                             | Path to exclude from scan                                       | ` `                                              |
+| `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded. (Artifact applies only to code-scan and image-scan)| `false`|
+| `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
+| `no-proxy`                                                 | Do not use system proxy settings (True or False)                | `false`                                          |
+| `no-blame`                                                 | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
+| `severity-level`                                           | Unknown (default), Low, Medium, High, Critical                  | `Unknown`                                        |
+| `severity-threshold`                                       | Severity-level threshold (default: 0)                           | `0`                                              |
+
+## Iac-Assessment Parameters
+
+| Parameter                                                  | Description                                                     | Default                                          |
+| ---------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| `blade`                                                    | ShiftLeft Scan Type (code-scan, iac-assessment, image-scan)     | `code-scan`                                      |
+| `directory`                                                | The directory where ShiftLeft does processing. (Default is /tmp). This is NOT for location of source code.| ` `    |
+| `environment`                                              | Cloudguard Native ShiftLeft Environment                         | ` `                                              |
+| `force-version`                                            | Use a specific blade version                                    | ` `                                              |
+| `scan-timeout`                                             | The length of time before a scan will timeout (in seconds)      | `600`                                            |
+| `path`                                                     | Path to terraform project for iac-assessment                    | `.`                                              |
+| `ruleset-id`                                               | Check Point CSPM Ruleset ID. Either this or logic-id must be populated if using iac-assessment | ` `               |
+| `entry`                                                    | Terraform Entry Point                                           | ` `                                              |
+| `logic-id`                                                 | Logic rule string. (Cannot be combined with ruleset ID)         | ` `                                              |
+| `exclude-path`                                             | Path to exclude from scan                                       | ` `                                              |
+| `json-output`                                              | JSON Output (True or False). If set to True, artifact will be created and uploaded. (Artifact applies only to code-scan and image-scan)| `false`|
+| `no-cache`                                                 | Do not take results from previous scan (True or False)          | `false`                                          |
+| `no-proxy`                                                 | Do not use system proxy settings (True or False)                | `false`                                          |
+| `no-blame`                                                 | Do not use Git blame on scanned files  (True or False)          | `false`                                          |
 | `severity-level`                                           | Unknown (default), Low, Medium, High, Critical                  | `Unknown`                                        |
 | `severity-threshold`                                       | Severity-level threshold (default: 0)                           | `0`                                              |

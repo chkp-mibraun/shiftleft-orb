@@ -1,5 +1,6 @@
 description:   The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
 parameters:
+#General Parameters
   blade:
     description: Select the blade to use.
     type: enum
@@ -21,14 +22,17 @@ parameters:
     description: Use a specific blade version
     type: string
     default: ""
-  code-source:
-    description: Location of source code or IAC
+#Code-Scan Parameters 
+   code-source:
+    description: Location of source code for code-scan blade
     type: string
     default: "."
+#Image-Scan Parameters 
   docker-image:
     description: Location of image tarfile
     type: string
     default: "."
+#Shared Code-Scan & Image-Scan Parameters  
   exclude-path:
     description: Path to exclude from scan
     type: string
@@ -49,10 +53,24 @@ parameters:
     description: Do not use Git blame on scanned files
     type: boolean 
     default: false
+#Iac-Assessment Parameters    
+  path:
+    description: Path to terraform project for iac-assessment
+    type: string
+    default: "."
   ruleset-id:
     description: Check Point CSPM Ruleset ID
     type: integer
     default: 1
+  entry:
+    description: Terraform Entry Point
+    type: string
+    default: ""
+  logic-id:
+    description: Logic rule string. (Cannot be combined with ruleset ID)
+    type: string
+    default: ""
+#Shared Parameters
   severity-level:
     description:  Unknown (default), Low, Medium, High, Critical
     type: enum
@@ -106,37 +124,6 @@ steps:
                     exit 6
                     fi
                   
-  # ShiftLeft IAC Assessment
-  - when:
-      condition:
-        equal: [ iac-assessment, << parameters.blade >> ] 
-      steps:
-        - run :
-            name: Run ShiftLeft IAC Assessment   
-            command: |
-              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>>     <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
-              iac-assessment -s <<parameters.code-source>> \
-              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
-              <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
-              <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
-              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
-              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
-              <<#parameters.json-output>>-j <<parameters.json-output>> | jq . > out.json || true <</parameters.json-output>> 
-        - when:
-            condition:
-              equal: [ true, << parameters.json-output >> ] 
-            steps:
-              - store_artifacts:
-                  path: ./out.json
-                  destination: out.json
-              - run: 
-                  name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
-                  command: |
-                    status=$(cat ./out.json | jq .action -r)
-                    if [ "$status" == "BLOCK" ]; then
-                    exit 6
-                    fi
-          
   # ShiftLeft Image Scan
   - when:
       condition:
@@ -145,7 +132,7 @@ steps:
         - run :
             name: Run ShiftLeft Image Scan
             command: |
-              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>>     <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
               image-scan -i <<parameters.docker-image>> \
               <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
               <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
@@ -167,4 +154,22 @@ steps:
                     if [ "$status" == "BLOCK" ]; then
                     exit 6
                     fi
+
+  # ShiftLeft IAC Assessment
+  - when:
+      condition:
+        equal: [ iac-assessment, << parameters.blade >> ] 
+      steps:
+        - run :
+            name: Run ShiftLeft IAC Assessment   
+            command: |
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              iac-assessment -p <<parameters.path>> \
+              <<#parameters.ruleset-id>-r <<parameters.ruleset-id>> <</parameters.ruleset-id>> \  
+              <<#parameters.logic-id>-l <<parameters.logic-id>> <</parameters.logic-id>> \
+              <<#parameters.entry>-e <<parameters.entry>> <</parameters.entry>> \   
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <</parameters.json-output>> 
 
