@@ -76,7 +76,7 @@ steps:
               <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
               <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
               <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
-              <<#parameters.json-output>>-j <<parameters.json-output>> || true > out.json <</parameters.json-output>> 
+              <<#parameters.json-output>>-j <<parameters.json-output>> > out.json || true <</parameters.json-output>> 
             store_artifacts:
               path: ./out.json
               destination: out.json
