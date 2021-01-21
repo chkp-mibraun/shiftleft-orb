@@ -89,12 +89,10 @@ steps:
                   name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
                   command: |
                     status=$(cat ./out.json | jq .action -r)
-                    block="BLOCK"
-                    if [ "$status" == "$block" ]; then
+                    if [ "$status" == "BLOCK" ]; then
                     exit 6
                     fi
-                    
-
+                  
   # ShiftLeft IAC Assessment
   - when:
       condition:
