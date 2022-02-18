@@ -1,0 +1,26 @@
+description: |
+  The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
+usage:
+  version: 2.1
+
+orbs:
+  shiftleft: chkp-mibraun/shiftleft
+workflows:
+  set-context:
+    jobs:
+      - build:
+      #Context must exist for Environment Variable to pass through to orb
+          context: Cloudguard
+jobs:
+  build:
+     machine:
+       image: ubuntu-2004:202010-01
+     steps:
+       - checkout
+       - shiftleft/shiftleft:
+           blade: iac-assessment
+           scan-timeout: 900
+           cpath: example/directory/
+           exclude-path: example/exclude/path/
+           ruleset-id: 201981
+

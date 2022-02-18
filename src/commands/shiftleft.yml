@@ -1,0 +1,180 @@
+description:   The Check Point Cloudguard ShiftLeft utility can be used to scan source code & images for vulnerabilites and malware. It can also scan IAC for compliance.
+parameters:
+  #General ShiftLeft Parameters
+  blade:
+    description: Select the blade to use.
+    type: enum
+    enum: ["code-scan", "iac-assessment", "image-scan"]
+    default: "code-scan"
+  scan-timeout:
+    description: The length of time before the scan times out (in seconds).
+    type: integer
+    default: 600
+  directory:
+    description: The directory where ShiftLeft does processing. (Default is /tmp). This is NOT for location of source code.
+    type: string
+    default: ""
+  environment:
+    description: Cloudguard Native ShiftLeft Environment
+    type: string
+    default: ""
+  force-version:
+    description: Use a specific blade version
+    type: string
+    default: ""
+  #Code-Scan Parameters 
+  code-source:
+    description: Location of source code for code-scan blade
+    type: string
+    default: "."
+  #Image-Scan Parameters 
+  docker-image:
+    description: Location of image tarfile
+    type: string
+    default: "."
+  #Shared Code-Scan & Image-Scan Parameters  
+  exclude-path:
+    description: Path to exclude from scan
+    type: string
+    default: ""
+  json-output:
+    description: JSON output
+    type: boolean
+    default: false
+  no-cache:
+    description: Do not take results from previous scans
+    type: boolean
+    default: false
+  no-proxy:
+    description: Do no use system proxy settings
+    type: boolean
+    default: false
+  no-blame:
+    description: Do not use Git blame on scanned files
+    type: boolean 
+    default: false
+  #Iac-Assessment Parameters
+  findings:
+    description: Show findings in human readable format
+    type: boolean
+    default: true 
+  path:
+    description: Path to terraform project for iac-assessment
+    type: string
+    default: "."
+  ruleset-id:
+    description: Check Point CSPM Ruleset ID
+    type: integer
+    default: 1
+  entry:
+    description: Terraform Entry Point
+    type: string
+    default: ""
+  logic-id:
+    description: Logic rule string. (Cannot be combined with ruleset ID)
+    type: string
+    default: ""
+#Shared Parameters
+  severity-level:
+    description:  Unknown (default), Low, Medium, High, Critical
+    type: enum
+    enum: ["Unknown", "Low", "Medium", "High", "Critical"]
+    default: "Unknown"
+  severity-threshold:
+    description: "severity-level threshold (default: 0)"
+    type: integer
+    default: 0
+
+steps:
+  # Install ShiftLeft
+  - run:
+      name: Download & Install ShiftLeft CLI
+      command: |
+        if [[ ! -x shiftleft/shiftleft ]]; then
+          mkdir shiftleft
+          wget https://shiftleft-prod.s3.amazonaws.com/blades/shiftleft/bin/linux/amd64/0.0.24/shiftleft -O shiftleft/shiftleft
+          chmod +x shiftleft/shiftleft
+        fi
+
+  # ShiftLeft Code Scan
+  - when:
+      condition:
+        equal: [ code-scan, << parameters.blade >> ]  
+      steps:
+        - run :
+            name: Run ShiftLeft Code Scan
+            command: |
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              code-scan -s <<parameters.code-source>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
+              <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <<parameters.json-output>> | jq . > out.json || true <</parameters.json-output>> 
+
+        - when:
+            condition:
+              equal: [ true, << parameters.json-output >> ] 
+            steps:
+              - store_artifacts:
+                  path: ./out.json
+                  destination: out.json
+              - run: 
+                  name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
+                  command: |
+                    status=$(cat ./out.json | jq .action -r)
+                    if [ "$status" == "BLOCK" ]; then
+                    exit 6
+                    fi
+                  
+  # ShiftLeft Image Scan
+  - when:
+      condition:
+        equal: [ image-scan, << parameters.blade >> ] 
+      steps:
+        - run :
+            name: Run ShiftLeft Image Scan
+            command: |
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              image-scan -i <<parameters.docker-image>> \
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.no-cache>> -nc <</parameters.no-cache>> <<#parameters.no-proxy>> -np <</parameters.no-proxy>> \
+              <<#parameters.no-blame>> -nb <</parameters.no-blame>> \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <<parameters.json-output>> | jq . > out.json || true <</parameters.json-output>> 
+        - when:
+            condition:
+              equal: [ true, << parameters.json-output >> ] 
+            steps:
+              - store_artifacts:
+                  path: ./out.json
+                  destination: out.json
+              - run: 
+                  name: Raise Error if ShiftLeft is in BLOCK State (json-output = true)      
+                  command: |
+                    status=$(cat ./out.json | jq .action -r)
+                    if [ "$status" == "BLOCK" ]; then
+                    exit 6
+                    fi
+
+  # ShiftLeft IAC Assessment
+  - when:
+      condition:
+        equal: [ iac-assessment, << parameters.blade >> ] 
+      steps:
+        - run :
+            name: Run ShiftLeft IAC Assessment   
+            command: |
+              shiftleft/shiftleft <<#parameters.scan-timeout>>-t <<parameters.scan-timeout>><</parameters.scan-timeout>> <<# parameters.directory >> -d << parameters.directory >> <</parameters.directory>> <<# parameters.environment >> -e << parameters.environment >> <</parameters.environment>> <<# parameters.force-version >> -f << parameters.force-version >> <</parameters.force-version>> \
+              iac-assessment -p <<parameters.path>> \
+              <<#parameters.ruleset-id>> -r <<parameters.ruleset-id>> <</parameters.ruleset-id>> -w \  
+              <<#parameters.logic-id>> -l <<parameters.logic-id>> <</parameters.logic-id>> \
+              <<#parameters.entry>> -e <<parameters.entry>> <</parameters.entry>> \  
+              <<#parameters.findings>> -f <<parameters.findings>> <</parameters.findings>> \ 
+              <<#parameters.exclude-path>>-x <<parameters.exclude-path>> <</parameters.exclude-path>>  \
+              <<#parameters.severity-level>> -sev <<parameters.severity-level>> <</parameters.severity-level>> \
+              <<#parameters.severity-threshold>> -sevt <<parameters.severity-threshold>> <</parameters.severity-threshold>> \
+              <<#parameters.json-output>>-j <</parameters.json-output>> 
+
